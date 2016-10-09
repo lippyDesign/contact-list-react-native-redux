@@ -4,3 +4,10 @@ export const selectContact = (contactId) => (
         payload: contactId
     }
 );
+
+export const searchContacts = (searchText) => (
+    {
+        type: 'search_contacts',
+        payload: searchText
+    }
+);

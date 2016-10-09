@@ -7,11 +7,13 @@ import reducers from './reducers';
 
 import { Header } from './components/common';
 import ContactList from './components/ContactList';
+import SearchBox from './components/SearchBox';
 
 const App = () => (
     <Provider store={createStore(reducers)}>
         <View style={{ flex: 1 }}>
             <Header headerText="Contacts List" />
+            <SearchBox />
             <ContactList />
         </View>
     </Provider>
