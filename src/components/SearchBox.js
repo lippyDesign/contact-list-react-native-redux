@@ -22,12 +22,6 @@ class SearchBox extends Component {
     }
 }
 
-const mapStateToProps = state => (
-    { 
-        contacts: state.contacts,
-        selectedContactId: state.selectedContactId,
-        searchText: state.searchText
-     }
-);
+const mapStateToProps = state => ({ searchText: state.searchText });
 
 export default connect(mapStateToProps, actions)(SearchBox);

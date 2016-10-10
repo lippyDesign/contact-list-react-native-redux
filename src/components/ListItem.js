@@ -36,10 +36,14 @@ class ListItem extends Component {
     }
 
     render() {
-        const { nameStyle } = styles;
+        let { nameStyle } = styles;
         const { id, firstName, lastName } = this.props.contact;
         
         const fullName = `${firstName} ${lastName}`;
+
+        if (this.props.expanded) {
+            nameStyle = { fontSize: 23, paddingLeft: 15, color: 'green' };
+        }
 
         return (
             <TouchableWithoutFeedback onPress={() => this.props.selectContact(id)}>
@@ -65,13 +69,13 @@ const styles = {
         padding: 15
     },
     expansionTextStyle: {
-        fontSize: 16
+        fontSize: 16,
+        color: 'green'
     }
 };
 
 const mapStateToProps = (state, ownProps) => {
     const expanded = state.selectedContactId === ownProps.contact.id;
-
     return { expanded };
 };
 

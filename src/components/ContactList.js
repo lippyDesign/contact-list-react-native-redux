@@ -1,24 +1,28 @@
 import React, { Component } from 'react';
-import { ListView } from 'react-native';
+import { ListView, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import ListItem from './ListItem';
 
 class ContactList extends Component {
   componentWillMount() {
+    this.listMaker();
+  }
+
+  listMaker() {
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
 
     this.dataSource = ds.cloneWithRows(this.props.contacts);
   }
-
-  componentWillUpdate() {
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    });
-
-    this.dataSource = ds.cloneWithRows(this.props.contacts);
+  
+  renderHelper() {
+    this.listMaker();
+    return (<ListView
+      dataSource={this.dataSource}
+      renderRow={this.renderRow}
+    />);
   }
 
   renderRow(contact) {
@@ -27,24 +31,31 @@ class ContactList extends Component {
 
   render() {
     return (
-      <ListView
-        dataSource={this.dataSource}
-        renderRow={this.renderRow}
-      />
+      <View>
+        {this.renderHelper()}
+      </View>
     );
   }
 }
 
+const chooseItems = (searchText, list) => (
+  list.filter(({ firstName, lastName }) => (
+    firstName.toLowerCase().includes(searchText.toLowerCase())
+    || lastName.toLowerCase().includes(searchText.toLowerCase())
+    )
+  )
+);
+
 const mapStateToProps = state => {
-  const { contacts, searchText } = state;
-  if (searchText) {
-    const contactsToShow = contacts.filter(contact => {
-      return contact.firstName.toLowerCase()[0] === searchText.toLowerCase() || contact.lastName.toLowerCase()[0] === searchText.toLowerCase();
-    });
-    return { contacts: contactsToShow };
-  } else {
-    return { contacts: state.contacts };
+  const { searchText, contacts } = state;
+  let componentsToShow = searchText ? chooseItems(searchText, contacts) : contacts;
+  if (componentsToShow.length === 0) {
+    componentsToShow = contacts;
   }
+  return {
+      searchText,
+      contacts: componentsToShow,
+    };
 };
 
 export default connect(mapStateToProps)(ContactList);
